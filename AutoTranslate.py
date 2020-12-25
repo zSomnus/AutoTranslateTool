@@ -71,13 +71,13 @@ while True:
         maxInt = int(maxInt/10)
 
 # Read .tsv file
-read_from_path = '../[000000] MetalUnitStrings - String.tsv'
+read_from_path = 'your_file.tsv'
 with open(read_from_path, 'rt', encoding='utf8') as f:
     reader = csv.reader(f, delimiter='\t', quoting=csv.QUOTE_NONE)
     column = [row[target_row] for row in reader]
 
 # Read .csv file
-# read_from_path = '../Original.csv'
+# read_from_path = 'your_file.csv'
 # with open(read_from_path, 'rt', encoding='utf8') as f:
 #     reader = csv.reader(f, quoting=csv.QUOTE_NONE)
 #     column = [row[target_row] for row in reader]
@@ -130,7 +130,8 @@ def baidu_translate_api(content):
 
 
 # Write to file
-path = original_language + '_' + translate_language + '_' + 'translation.tsv'
+path = 'results/' + original_language + '_' + \
+    translate_language + '_' + 'translation.tsv'
 
 with open(path, 'w', newline="", encoding='utf8') as f:
     csv_write = csv.writer(f, delimiter='\t')
