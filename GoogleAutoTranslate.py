@@ -371,6 +371,7 @@ class MainWindow(QDialog):
 
     def translation(self):
         original_language = 'en'
+        self.lang_index = self.trans_lang.currentIndex()
         translate_language = self.lang_key_list[self.lang_index]
         target_row = 5
 
