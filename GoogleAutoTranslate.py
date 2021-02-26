@@ -8,6 +8,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QHBoxLayout, QLabel, QProgressBar, QProgressDialog, QPushButton, QVBoxLayout
 from PyQt5.uic import loadUi
+from pathlib import Path
 
 lang_list = [
     'Afrikaans',
@@ -344,6 +345,8 @@ LANGUAGES = {
     'zu': 'zulu',
 }
 
+col_number_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+
 
 class MainWindow(QDialog):
 
@@ -358,6 +361,8 @@ class MainWindow(QDialog):
         self.browseFile.clicked.connect(self.browsefiles)
         self.browseDirectory.clicked.connect(self.browseDirectories)
         self.trans_lang.addItems(lang_list)
+        self.original_lang.addItems(lang_list)
+        self.col_number.addItems(col_number_list)
         self.translate.clicked.connect(self.translation)
 
     def browsefiles(self):
@@ -381,10 +386,11 @@ class MainWindow(QDialog):
         progress.setWindowModality(Qt.WindowModal)
         progress.setRange(0, 100)
 
-        original_language = 'en'
+        self.original_index = self.original_lang.currentIndex()
+        original_language = lang_key_list[self.original_index]
         self.lang_index = self.trans_lang.currentIndex()
         translate_language = lang_key_list[self.lang_index]
-        target_row = 5
+        target_row = self.col_number.currentIndex()
 
         tr = Translator()
         tr.raise_Exception = True
@@ -396,11 +402,12 @@ class MainWindow(QDialog):
             column = [row[target_row] for row in reader]
 
         # Write to file
-        path = self.write_to + original_language + '_' + \
-            translate_language + '_' + 'translation.tsv'
+        path = self.write_to + '/' + original_language + '_' + \
+            translate_language + '_' + Path(self.filename.text()).name
 
         with open(path, 'w', newline="", encoding='utf8') as f:
-            csv_write = csv.writer(f)
+            csv_write = csv.writer(
+                f, delimiter='\t', quoting=csv.QUOTE_NONE, quotechar=None, escapechar="|")
             count = 0
 
             for content in column:
